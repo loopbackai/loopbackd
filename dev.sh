@@ -9,7 +9,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   build)
     ./venv/bin/pyinstaller main.py --onefile
-    mv dist/main dist/loopbackd
+    mv dist/main dist/loopbackd_$(uname)_$(arch)
     exit 0
     ;;
   run)

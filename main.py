@@ -1,12 +1,17 @@
-from asyncio import subprocess
 import typer
 from rich import print
 
-app = typer.Typer(help="LoopbackAI CLI manage and run your loopback daemon")
+app = typer.Typer(
+    help="LoopbackAI CLI manage and run your loopback daemon",
+    epilog="Find more help at https://www.loopback.ai",
+)
 
 
-@app.command(help="Initalize the CLI and start the daemon if not already running")
+@app.command()
 def up():
+    """
+    Initalize the CLI and start the daemon if not already running
+    """
     from loopbackd.auth import get_token
 
     print(
@@ -17,15 +22,21 @@ def up():
     )
 
 
-@app.command(help="Show the daemon status")
+@app.command()
 def status():
+    """
+    Show the daemon status
+    """
     import subprocess
 
     subprocess.run("systemctl status loopbackd".split())
 
 
-@app.command(help="Run the daemon in foreground for debug purposes")
+@app.command(rich_help_panel="Debug")
 def daemon():
+    """
+    Run the daemon in foreground for debug purposes
+    """
     import loopbackd.daemon as daemon
     import asyncio
 
