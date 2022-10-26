@@ -8,8 +8,12 @@ while [[ $# -gt 0 ]]; do
     exit 0
     ;;
   build)
-    ./venv/bin/pyinstaller main.py --onefile
+    rm -rf venv_build
+    python -m venv venv_build
+    ./venv_build/bin/pip install -r requirements.txt
+    ./venv_build/bin/pyinstaller main.py --onefile
     mv dist/main dist/loopbackd_$(uname)_$(arch)
+    rm -rf venv_build
     exit 0
     ;;
   run)
