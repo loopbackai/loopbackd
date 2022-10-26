@@ -1,2 +1,10 @@
-# daemon
-LoopbackAI daemon - for connecting remote shell connection
+# Loopbackd
+Launch the LoopbackAI daemon and control your computer remotely via Telegram/Whatsapp/SMS
+
+# Installation
+
+```bash
+curl -sL https://raw.githubusercontent.com/loopbackai/loopbackd/master/install.sh | bash
+loopbackd up
+# Follow the instructions to authenticate
+```

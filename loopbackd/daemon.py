@@ -7,6 +7,12 @@ import json
 import base64
 import sys
 
+from loopbackd.auth import get_token
+
+
+LOOPBACK_TOKEN = os.environ.get("LOOPBACK_TOKEN", get_token())
+VERSION = os.environ.get("LOOPBACK_DAEMON_VERSION", "1")
+
 master_fd, slave_fd = pty.openpty()
 producer_q = asyncio.Queue()
 consumer_q = asyncio.Queue()
@@ -51,7 +57,7 @@ async def producer_handler(websocket):
         await websocket.send(
             json.dumps(
                 {
-                    "topic": "loopback:chen123",
+                    "topic": LOOPBACK_TOKEN,
                     "event": "data",
                     "payload": base64.b64encode(message).decode("utf-8"),
                     "ref": "",
@@ -76,15 +82,13 @@ async def handler():
 
     loop.call_soon(poll_process)
 
-    async with websockets.connect(
-        "wss://3de4-77-137-70-101.ngrok.io/socket/websocket"
-    ) as websocket:
+    async with websockets.connect("wss://gw.loopback.ai/websocket") as websocket:
         await websocket.send(
             json.dumps(
                 {
-                    "topic": "loopback:chen123",
+                    "topic": LOOPBACK_TOKEN,
                     "event": "phx_join",
-                    "payload": "",
+                    "payload": {"daemon_version": VERSION},
                     "ref": "",
                     "join_ref": "",
                 }
@@ -94,6 +98,3 @@ async def handler():
             consumer_handler(websocket),
             producer_handler(websocket),
         )
-
-
-asyncio.run(handler())
