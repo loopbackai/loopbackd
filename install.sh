@@ -19,11 +19,13 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-RestartSec=1
+RestartSec=5
+StartLimitBurst=15
+StartLimitIntervalSec=300
+TimeoutStartSec=0
 RemainAfterExit=yes
 User=$USER
 ExecStart=/usr/local/bin/loopbackd daemon
-TimeoutStartSec=0
 
 [Install]
 WantedBy=multi-user.target
