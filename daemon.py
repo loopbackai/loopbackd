@@ -3,6 +3,9 @@ import pty
 import websockets
 import os
 import subprocess
+import json
+import base64
+import sys
 
 master_fd, slave_fd = pty.openpty()
 producer_q = asyncio.Queue()
@@ -34,20 +37,59 @@ def write_pty():
 
 async def consumer_handler(websocket):
     async for message in websocket:
-        await consumer_q.put(message)
+        print("RECEIVED:", message)
+        message = json.loads(message)
+        if message["event"] == "new_command":
+            await consumer_q.put(message["payload"])
+        # await consumer_q.put(message)
 
 
 async def producer_handler(websocket):
     while True:
-        await websocket.send(await producer_q.get())
+        message = await producer_q.get()
+        print("SENDING: ", message)
+        await websocket.send(
+            json.dumps(
+                {
+                    "topic": "loopback:chen123",
+                    "event": "data",
+                    "payload": base64.b64encode(message).decode("utf-8"),
+                    "ref": "",
+                    "join_ref": "",
+                }
+            )
+        )
+        # await websocket.send(await producer_q.get())
 
 
 async def handler():
     loop = asyncio.get_event_loop()
     loop.add_reader(master_fd, read_pty)
     loop.add_writer(master_fd, write_pty)
-    async with websockets.connect("ws://localhost:1234") as websocket:
-        print("connected")
+
+    # poll process and terminate when process exit
+    def poll_process():
+        if p.poll() is not None:
+            loop.stop()
+            sys.exit(0)
+        loop.call_soon(poll_process)
+
+    loop.call_soon(poll_process)
+
+    async with websockets.connect(
+        "wss://3de4-77-137-70-101.ngrok.io/socket/websocket"
+    ) as websocket:
+        await websocket.send(
+            json.dumps(
+                {
+                    "topic": "loopback:chen123",
+                    "event": "phx_join",
+                    "payload": "",
+                    "ref": "",
+                    "join_ref": "",
+                }
+            )
+        )
         await asyncio.gather(
             consumer_handler(websocket),
             producer_handler(websocket),
