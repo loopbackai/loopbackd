@@ -11,6 +11,7 @@ if [[ $(uname -s) == "Linux" ]] && [[ $(arch) == "x86_64" ]]; then
 
     # download new binary
     curl -sLo /usr/local/bin/loopbackd https://github.com/loopbackai/loopbackd/releases/latest/download/loopbackd_Linux_x86_64
+    chmod +x /usr/local/bin/loopbackd
 else
     echo "Unsupported system."
     exit 1
