@@ -18,6 +18,7 @@ producer_q = asyncio.Queue()
 consumer_q = asyncio.Queue()
 
 consumer_q.put_nowait("stty -echo\n")
+consumer_q.put_nowait("cd ~\n")
 
 p = subprocess.Popen(
     ["bash"],
