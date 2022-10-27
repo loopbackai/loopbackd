@@ -18,6 +18,8 @@ producer_q = asyncio.Queue()
 consumer_q = asyncio.Queue()
 
 consumer_q.put_nowait("stty -echo\n")
+consumer_q.put_nowait("stty rows 30\n")
+consumer_q.put_nowait("stty cols 40\n")
 consumer_q.put_nowait("cd ~\n")
 
 p = subprocess.Popen(
