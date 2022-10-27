@@ -3,7 +3,14 @@
 # Download binary
 
 if [[ $(uname -s) == "Linux" ]] && [[ $(arch) == "x86_64" ]]; then
-    curl -o /usr/local/bin/loopbackd https://github.com/loopbackai/loopbackd/releases/latest/download/loopbackd_Linux_x86_64
+    # stop & disable service if exists
+    {
+        systemctl stop loopbackd
+        systemctl disable loopbackd
+    } &> /dev/null
+
+    # download new binary
+    curl -sLo /usr/local/bin/loopbackd https://github.com/loopbackai/loopbackd/releases/latest/download/loopbackd_Linux_x86_64
 else
     echo "Unsupported system."
     exit 1
@@ -20,11 +27,8 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=5
-StartLimitBurst=15
-StartLimitIntervalSec=300
 TimeoutStartSec=0
-RemainAfterExit=yes
-User=$USER
+User=$SUDO_USER
 ExecStart=/usr/local/bin/loopbackd daemon
 
 [Install]
@@ -33,3 +37,5 @@ EOM
 
 systemctl start loopbackd
 systemctl enable loopbackd
+
+echo "Installed successfully - run 'loopbackd up' for the next step"

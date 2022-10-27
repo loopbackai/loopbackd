@@ -17,6 +17,8 @@ master_fd, slave_fd = pty.openpty()
 producer_q = asyncio.Queue()
 consumer_q = asyncio.Queue()
 
+consumer_q.put_nowait("stty -echo\n")
+
 p = subprocess.Popen(
     ["bash"],
     stdin=slave_fd,
