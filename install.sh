@@ -2,15 +2,20 @@
 
 # Download binary
 
-if [[ $(uname -s) == "Linux" ]] && [[ $(arch) == "x86_64" ]]; then
-    # stop & disable service if exists
-    {
-        systemctl stop loopbackd
-        systemctl disable loopbackd
-    } &> /dev/null
+OS=$(uname -s)
+ARCH=$(arch)
 
-    # download new binary
-    curl -sLo /usr/local/bin/loopbackd https://github.com/loopbackai/loopbackd/releases/latest/download/loopbackd_Linux_x86_64
+# stop & disable service if exists
+{
+    systemctl stop loopbackd
+    systemctl disable loopbackd
+} &> /dev/null
+
+curl -sfLo /usr/local/bin/loopbackd https://github.com/loopbackai/loopbackd/releases/latest/download/loopbackd_"$OS"_"$ARCH"
+CURL_RESPONSE=$?
+
+if [[ $CURL_RESPONSE == 0 ]]
+then
     chmod +x /usr/local/bin/loopbackd
 else
     echo "Unsupported system."
