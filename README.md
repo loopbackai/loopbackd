@@ -1,6 +1,7 @@
 # Loopbackd
 Launch the LoopbackAI daemon and control your computer remotely via Telegram/Whatsapp/SMS
 
+[Loopback.ai/download](https://www.loopback.ai/download)
 
 ## Installation
 
@@ -36,3 +37,12 @@ Install python 3.6+ and clone the project
 cp dist/loopbackd* /usr/local/bin/loopbackd
 ```
 Create a systemd service or similar based on the example in ```install.sh```
+
+## Uninstall
+
+```bash
+sudo systemctl stop loopbackd.service
+sudo systemctl disable loopbackd.service
+sudo rm /usr/local/bin/loopbackd
+sudo rm /etc/systemd/system/loopbackd.service
+```
