@@ -1,3 +1,5 @@
+[Discord](https://discord.gg/ZHPcHH8vZF) | [Discord on Scrolls](https://www.scrollsbot.com/discord/1026774968576507925/1026774969100812290/latest)
+
 # Loopbackd
 Launch the LoopbackAI daemon and control your computer remotely via Telegram/Whatsapp/SMS
 
